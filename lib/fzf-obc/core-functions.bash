@@ -333,7 +333,34 @@ __fzf_obc_update_complete() {
 	local wrapper_name
 	local complete_def
 	local complete_def_arr
-	while IFS= read -r complete_def;do
+	local complete_defs=(
+		"complete -F _longopt mv"
+		"complete -F _longopt cp"
+		"complete -F _longopt ls"
+		"complete -F _minimal l"
+		"complete -F _minimal la"
+		"complete -F _longopt rm"
+		"complete -F _minimal rr"
+		"complete -F _longopt du"
+		"complete -F _longopt cat"
+		"complete -F _longopt less"
+		"complete -o nospace -F _cd cd"
+		"complete -F _bat bat"
+		"complete -F _minimal s"
+		"complete -F _minimal subl"
+		"complete -F _minimal v"
+		"complete -F _minimal code"
+		"complete -F _minimal vdiff"
+		"complete -F _minimal o"
+		"complete -F _minimal open"
+		"complete -F _minimal fs"
+		"complete -F _minimal extract"
+		"complete -o bashdefault -o default -o nospace -F __git_wrap__git_main git"
+		"complete -F _minimal diff"
+	)
+
+	for complete_def in "${complete_defs[@]}"; do
+		# echo "$complete_def"
 		IFS=' ' read -r -a complete_def_arr <<< "${complete_def}"
 		func_name="${complete_def_arr[${#complete_def_arr[@]}-2]}"
 		wrapper_name="__fzf_obc_wrapper_${func_name}"
@@ -346,7 +373,25 @@ __fzf_obc_update_complete() {
 		fi
 		complete_def_arr[${#complete_def_arr[@]}-2]="${wrapper_name}"
 		eval "${complete_def_arr[@]//\\/\\\\}"
-	done < <(complete | grep -E -- '-F ([^ ]+)( |$)' | grep -v " -F __fzf_obc_wrapper_" | sed -r "s/(-F [^ ]+) ?$/\1 ''/")
+	done
+
+	# i=0
+	# while IFS= read -r complete_def;do
+	# 	echo "$i.complete_def: ${complete_def}"
+	# 	i=$((i+1))
+	# 	IFS=' ' read -r -a complete_def_arr <<< "${complete_def}"
+	# 	func_name="${complete_def_arr[${#complete_def_arr[@]}-2]}"
+	# 	wrapper_name="__fzf_obc_wrapper_${func_name}"
+	# 	if ! type -t "${wrapper_name}" > /dev/null 2>&1 ; then
+	# 		# shellcheck disable=SC1090
+	# 		source <(
+	# 				sed "s#::FUNC_NAME::#${func_name}#g" "${fzf_obc_path}/lib/fzf-obc/wrapper.tpl.bash" \
+	# 				| sed "s#::FZF_OBC_PATH::#${fzf_obc_path}#"
+	# 		)
+	# 	fi
+	# 	complete_def_arr[${#complete_def_arr[@]}-2]="${wrapper_name}"
+	# 	eval "${complete_def_arr[@]//\\/\\\\}"
+	# done < <(complete | grep -E -- '-F ([^ ]+)( |$)' | grep -v " -F __fzf_obc_wrapper_" | sed -r "s/(-F [^ ]+) ?$/\1 ''/" )
 }
 
 __fzf_obc_add_all_traps() {
