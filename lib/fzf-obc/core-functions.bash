@@ -357,6 +357,12 @@ __fzf_obc_update_complete() {
 		"complete -F _minimal extract"
 		"complete -o bashdefault -o default -o nospace -F __git_wrap__git_main git"
 		"complete -F _minimal diff"
+		"complete -F _minimal del"
+		"complete -F _minimal delete"
+		"complete -F _minimal stowup"
+		"complete -F _minimal stowdown"
+		"complete -F _minimal abspath"
+		"complete -F _minimal bind-file"
 	)
 
 	for complete_def in "${complete_defs[@]}"; do
